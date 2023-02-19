@@ -88,34 +88,17 @@ def decode(image_to_decode, n_bits):
 
     return make_image(data, image_to_decode.size)
 
-
-def recompile_frame(values):
-    print("entered recompiling")
-
-
-    frameSize = (1920, 1080)
-    # replace the new encoded image frame with original frame
-    os.remove('C:/Users/Dell/PycharmProjects/Steganography_Vid/data/frame'+str(values)+'.jpg')
-    os.rename('C:/Users/Dell/PycharmProjects/Steganography_Vid/data/encoded.jpg','C:/Users/Dell/PycharmProjects/Steganography_Vid/data/frame'+str(values)+'.jpg')
-    out = cv2.VideoWriter('output_video.avi', cv2.VideoWriter_fourcc(*'DIVX'), 29.97, frameSize)
-    for filename in glob.glob('C:/Users/Dell/PycharmProjects/Steganography_Vid/data/*jpg'):
-        img = cv2.imread(filename)
-        out.write(img)
-        out.release()
-        break
-
-
 if "__main__":
 
     ##############################################################################################################################
 
     # Read the video from specified path
-    cam = cv2.VideoCapture("ScreenVideo.mp4")
+    cam = cv2.VideoCapture("output_video.avi")
 
     try:
         # creating a folder named data
-        if not os.path.exists('data'):
-            os.makedirs('data')
+        if not os.path.exists('dataDecr'):
+            os.makedirs('dataDecr')
 
     # if not created then raise error
     except OSError:
@@ -131,7 +114,7 @@ if "__main__":
 
         if ret:
             # if video is still left continue creating images
-            name = './data/frame' + str(currentframe) + '.jpg'
+            name = './dataDecr/frame' + str(currentframe) + '.jpg'
             print('Creating...' + name)
 
             # writing the extracted images
@@ -151,12 +134,14 @@ if "__main__":
 
     # generate random integer to select a random frame
     # generate some integers
-    values = int(randint(0, currentframe, 1))
-    print(values)
-    em_img = './data/frame' + str(values) + '.jpg'
-    name_sel_img='frame'+str(values)
+    # values = int(randint(0, currentframe, 1))
+    # print(values)
+    # em_img = './dataDecr/frame' + str(values) + '.jpg'
+    # name_sel_img='frame'+str(values)
     # print(name_sel_img)
-    selected_img_read = cv2.imread(em_img, cv2.IMREAD_ANYCOLOR)
+    # selected_img_read = cv2.imread(em_img, cv2.IMREAD_ANYCOLOR)
+
+
 
 
     # # to show the selected frame
@@ -169,31 +154,23 @@ if "__main__":
 
     ########################################################################################################################
 
-    image_to_hide_path = "./img.jpg"
-    image_to_hide_in_path = em_img
-    encoded_image_path = "./data/encoded.jpg"
+    image_to_hide_path = "./sunflower.jpg"
+    # image_to_hide_in_path = em_img
+    encoded_image_path = "./data/frame352.jpg"
     decoded_image_path = "./decoded.jpg"
     n_bits = 2
+    values=352
 
-    image_to_hide = Image.open(image_to_hide_path)
-    image_to_hide_in = Image.open(image_to_hide_in_path)
+    # image_to_hide = Image.open(image_to_hide_path)
+    # image_to_hide_in = Image.open(image_to_hide_in_path)
 
     for i in range(0,values+1):
         while i==values:
-            encode(image_to_hide, image_to_hide_in, n_bits).save(encoded_image_path)
-            choice = input("to recompile video enter y")
-            if choice == 'y':
-                recompile_frame(values)
-            else:
-                break
+            # encode(image_to_hide, image_to_hide_in, n_bits).save(encoded_image_path)
 
-
-            # image_to_decode = Image.open(encoded_image_path)
-            # decode(image_to_decode, n_bits).save(decoded_image_path)
-
-##############################################################################################################################
-
-
+            image_to_decode = Image.open(encoded_image_path)
+            decode(image_to_decode, n_bits).save(decoded_image_path)
+            break
 
 
     #######################################################################################################
@@ -219,8 +196,5 @@ if "__main__":
     #     out.write(img)
     #
     # out.release()
-   #############################################################################################################################################33
 
 
-
-# last thing i did was send frame's address to recompile function, catch up from here next
